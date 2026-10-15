@@ -1,0 +1,47 @@
+name: Deploy independent teacher requests portal
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout source (read only)
+        uses: actions/checkout@v4
+        with:
+          repository: edu-halaqat/edu-halaqat.github.io
+          ref: main
+          path: source
+          persist-credentials: false
+      - name: Prepare isolated portal
+        run: |
+          mkdir -p site
+          cp -a source/tallam/. site/
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('site/admin/admin.js')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('https://edu-halaqat.github.io/tallam/admin/', 'https://edu-halaqat.github.io/tallam-requests/admin/')
+          p.write_text(s,encoding='utf-8')
+          PY
+          touch site/.nojekyll
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
