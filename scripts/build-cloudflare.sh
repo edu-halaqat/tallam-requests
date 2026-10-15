@@ -11,7 +11,8 @@ s = p.read_text(encoding='utf-8')
 old = 'https://edu-halaqat.github.io/tallam/admin/'
 if old not in s:
     raise SystemExit('Expected original teacher-admin redirect URL was not found; refusing to deploy')
-s = s.replace(old, 'https://tallam-requests.' + 'abdulkareem20112011.workers.dev/admin/')
+s = s.replace('adminRedirectUrl: "' + old + '"', 'adminRedirectUrl: null')
+s = s.replace('const redirectTo = CONFIG.adminRedirectUrl;', 'const redirectTo = new URL("admin/", window.location.origin + "/").href;')
 p.write_text(s, encoding='utf-8')
 PY
 touch dist/.nojekyll
