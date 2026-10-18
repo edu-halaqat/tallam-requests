@@ -98,6 +98,20 @@ style="""<style id="teacher-requests-compact-table">
 s=s.replace('</head>',style+'\n</head>')
 p.write_text(s,encoding='utf-8')
 PY
+# Keep attachment cards compact even with arbitrarily long percent-encoded names.
+cp cloudflare/attachment-layout.css dist/admin/attachment-layout.css
+cp cloudflare/attachment-filenames.js dist/admin/attachment-filenames.js
+python3 - <<'PY'
+from pathlib import Path
+p = Path('dist/admin/index.html')
+s = p.read_text(encoding='utf-8')
+assert '</head>' in s and '</body>' in s, 'Cannot safely inject attachment layout'
+s = s.replace('</head>', '<link rel="stylesheet" href="attachment-layout.css?v=20261018-long-filenames-v1">\n</head>', 1)
+s = s.replace('</body>', '<script defer src="attachment-filenames.js?v=20261018-long-filenames-v1"></script>\n</body>', 1)
+p.write_text(s, encoding='utf-8')
+PY
+test -s dist/admin/attachment-layout.css
+test -s dist/admin/attachment-filenames.js
 touch dist/.nojekyll
 test -s dist/index.html
 test -s dist/admin/index.html
