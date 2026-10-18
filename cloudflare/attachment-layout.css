@@ -1,0 +1,75 @@
+/* Cloudflare teacher applications: compact, overflow-safe attachments grid. */
+.modal .modal-card,
+.modal .modal-body,
+.modal #attachmentsGrid { min-width: 0; max-width: 100%; box-sizing: border-box; }
+
+.modal #attachmentsGrid.attachments {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: max-content;
+  align-items: start;
+  align-content: start;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  overflow-x: clip;
+  margin-top: 14px;
+}
+.modal #attachmentsGrid > .attachment {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 0;
+  height: auto;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 12px;
+  border: 1px solid #dce7e5;
+  border-radius: 12px;
+}
+.modal #attachmentsGrid > .attachment strong,
+.modal #attachmentsGrid > .attachment span {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.modal #attachmentsGrid > .attachment strong { line-height: 1.5; }
+.modal #attachmentsGrid > .attachment span {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  direction: ltr;
+  text-align: start;
+  unicode-bidi: plaintext;
+  font-size: .86rem;
+  line-height: 1.7;
+  color: #536d69;
+}
+.modal #attachmentsGrid > .attachment > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+  min-width: 0;
+  max-width: 100%;
+}
+.modal #attachmentsGrid > .attachment a.row-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  max-width: 100%;
+  padding: 6px 12px;
+  font-size: .9rem;
+  line-height: 1.45;
+  white-space: nowrap;
+  text-decoration: none;
+}
+@media (max-width: 740px) {
+  .modal #attachmentsGrid.attachments { grid-template-columns: minmax(0, 1fr); }
+}
